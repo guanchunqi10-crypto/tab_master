@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import AddShortcutModal from './AddShortcutModal';
 
 // 默认快捷链接预设
 const defaultShortcuts = [
@@ -138,6 +139,7 @@ export default function QuickAccessBar({
   onRemoveShortcut,
   onEditShortcut 
 }) {
+  const [showModal, setShowModal] = useState(false);
   const shortcuts = [...customShortcuts];
   
   if (shortcuts.length < 8) {
@@ -223,6 +225,15 @@ export default function QuickAccessBar({
   const handleEdit = (shortcut, newName) => {
     onEditShortcut?.(shortcut, newName);
   };
+
+  const handleAddClick = () => {
+    setShowModal(true);
+  };
+
+  const handleAddSubmit = ({ name, url }) => {
+    onAddShortcut?.({ name, url });
+    setShowModal(false);
+  };
   
   return (
     <div className="glass-light px-4 py-3 mb-4">
@@ -237,10 +248,17 @@ export default function QuickAccessBar({
           />
         ))}
         
-        {displayShortcuts.length < 8 && onAddShortcut && (
-          <AddShortcutButton onClick={onAddShortcut} />
+        {displayShortcuts.length < 8 && (
+          <AddShortcutButton onClick={handleAddClick} />
         )}
       </div>
+
+      {/* 添加快捷方式模态框 */}
+      <AddShortcutModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onAdd={handleAddSubmit}
+      />
     </div>
   );
 }

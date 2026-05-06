@@ -339,23 +339,17 @@ export default function App() {
   }, [handleTabClose, checkAchievements]);
 
   // 快捷链接处理函数
-  const handleAddShortcut = useCallback(async () => {
-    const url = prompt('请输入网址：');
-    if (url) {
-      const name = prompt('请输入名称：', new URL(url).hostname);
-      if (name) {
-        const newShortcut = {
-          id: `custom-${Date.now()}`,
-          name,
-          url: url.startsWith('http') ? url : `https://${url}`,
-          color: 'linear-gradient(135deg, #6366F1, #8B5CF6)'
-        };
-        const updated = [...shortcuts, newShortcut];
-        setShortcuts(updated);
-        await saveShortcuts(updated);
-        showToast('快捷方式已添加');
-      }
-    }
+  const handleAddShortcut = useCallback(async ({ name, url }) => {
+    const newShortcut = {
+      id: `custom-${Date.now()}`,
+      name,
+      url,
+      color: 'linear-gradient(135deg, #6366F1, #8B5CF6)'
+    };
+    const updated = [...shortcuts, newShortcut];
+    setShortcuts(updated);
+    await saveShortcuts(updated);
+    showToast('快捷方式已添加');
   }, [shortcuts, showToast]);
 
   const handleRemoveShortcut = useCallback(async (id) => {
