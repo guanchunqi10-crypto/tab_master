@@ -365,6 +365,15 @@ export default function App() {
     showToast('快捷方式已删除');
   }, [shortcuts, showToast]);
 
+  const handleEditShortcut = useCallback(async (shortcut, newName) => {
+    const updated = shortcuts.map(s => 
+      s.id === shortcut.id ? { ...s, name: newName } : s
+    );
+    setShortcuts(updated);
+    await saveShortcuts(updated);
+    showToast('快捷方式已更新');
+  }, [shortcuts, showToast]);
+
   // 搜索匹配逻辑
   const getFilteredGroups = useCallback(() => {
     if (!searchTerm.trim()) {
@@ -838,6 +847,7 @@ export default function App() {
               customShortcuts={shortcuts}
               onAddShortcut={handleAddShortcut}
               onRemoveShortcut={handleRemoveShortcut}
+              onEditShortcut={handleEditShortcut}
             />
 
             {/* Tab列表区域 */}
